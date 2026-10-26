@@ -1,0 +1,7 @@
+package com.ekjot.orderprocessing.repository;
+
+import com.ekjot.orderprocessing.entity.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProductRepository extends JpaRepository<Product, Long> {
+}
