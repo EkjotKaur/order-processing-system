@@ -8,19 +8,21 @@ import com.ekjot.orderprocessing.enums.ProductStatus;
 import com.ekjot.orderprocessing.exception.ProductNotFoundException;
 import com.ekjot.orderprocessing.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
 
     private ProductResponse mapToProductResponse(Product product){
-        return new ProductResponse(product.getId(), product.getName(), product.getDescription(), product.getStatus());
+        return new ProductResponse(product.getId(), product.getName(), product.getDescription(), product.getStatus(), product.getPrice());
     }
 
     public ProductService(ProductRepository productRepository){
         this.productRepository = productRepository;
     }
 
+    @Transactional
     public ProductResponse createProduct(CreateProductRequest request){
         Product product = new Product();
 
@@ -28,6 +30,9 @@ public class ProductService {
         product.setDescription(request.getDescription());
 
         product.setStatus(ProductStatus.ACTIVE);
+
+        //temp
+        product.setPrice(request.getPrice());
 
         productRepository.save(product);
 
@@ -39,17 +44,22 @@ public class ProductService {
         return mapToProductResponse(product);
     }
 
+    @Transactional
     public ProductResponse updateProduct(Long id, UpdateProductRequest request){
         Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setStatus(request.getStatus());
 
+        //temp
+        product.setPrice(request.getPrice());
+
         productRepository.save(product);
 
         return mapToProductResponse(product);
     }
 
+    @Transactional
     public void deleteProduct(Long id){
         Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
         productRepository.delete(product);

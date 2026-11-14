@@ -3,6 +3,7 @@ package com.ekjot.orderprocessing.entity;
 import com.ekjot.orderprocessing.enums.ProductStatus;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,6 +18,9 @@ public class Product {
     private ProductStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    // temp
+    private BigDecimal price;
 
     public Long getId() {
         return id;
@@ -64,5 +68,13 @@ public class Product {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 }

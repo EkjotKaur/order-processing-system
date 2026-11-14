@@ -2,7 +2,11 @@ package com.ekjot.orderprocessing.dto.request;
 
 import com.ekjot.orderprocessing.enums.ProductStatus;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
+
+import java.math.BigDecimal;
 
 public class UpdateProductRequest {
     @NotBlank
@@ -13,6 +17,11 @@ public class UpdateProductRequest {
     private String description;
 
     private ProductStatus status;
+
+    //temp
+    @NotNull
+    @Positive
+    private BigDecimal price;
 
     public String getName() {
         return name;
@@ -36,5 +45,13 @@ public class UpdateProductRequest {
 
     public void setStatus(ProductStatus status) {
         this.status = status;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 }

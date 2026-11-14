@@ -1,7 +1,11 @@
 package com.ekjot.orderprocessing.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
+
+import java.math.BigDecimal;
 
 public class CreateProductRequest {
     @NotBlank
@@ -10,6 +14,11 @@ public class CreateProductRequest {
 
     @Size(max=1000)
     private String description;
+
+    //temp
+    @NotNull
+    @Positive
+    private BigDecimal price;
 
     public String getName() {
         return name;
@@ -25,5 +34,13 @@ public class CreateProductRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 }

@@ -17,4 +17,34 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String>handleProductNotFound(ProductNotFoundException e){
         return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
+
+    @ExceptionHandler(ProductInactiveException.class)
+    public ResponseEntity<String> handleProductInactive(ProductInactiveException e){
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<String> handleOrderNotFound(OrderNotFoundException e){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler(InventoryNotFoundException.class)
+    public ResponseEntity<String> handleInventoryNotFound(InventoryNotFoundException e){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler(InventoryAlreadyExistsException.class)
+    public ResponseEntity<String> handleInventoryAlreadyExists(InventoryAlreadyExistsException e){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
+    @ExceptionHandler(InsufficientInventoryException.class)
+    public ResponseEntity<String> handleInsufficientInventoryException(InsufficientInventoryException e){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
+    @ExceptionHandler(InsufficientReservedInventoryException.class)
+    public ResponseEntity<String> handleInsufficientReservedInventoryException(InsufficientReservedInventoryException e){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
 }
