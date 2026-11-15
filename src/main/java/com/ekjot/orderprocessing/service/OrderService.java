@@ -12,6 +12,7 @@ import com.ekjot.orderprocessing.entity.OrderItem;
 import com.ekjot.orderprocessing.entity.Product;
 import com.ekjot.orderprocessing.enums.OrderStatus;
 import com.ekjot.orderprocessing.enums.ProductStatus;
+import com.ekjot.orderprocessing.exception.InvalidOrderStateException;
 import com.ekjot.orderprocessing.exception.OrderNotFoundException;
 import com.ekjot.orderprocessing.exception.ProductInactiveException;
 import com.ekjot.orderprocessing.exception.ProductNotFoundException;
@@ -85,9 +86,12 @@ public class OrderService {
         return mapToOrderResponse(order);
     }
 
+    public Order getOrderById(Long orderId){
+       return orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
+    }
+
     public OrderResponse getOrder(Long orderId){
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
-        return mapToOrderResponse(order);
+        return mapToOrderResponse(getOrderById(orderId));
     }
 
     public List<OrderResponse> getOrders(Long customerId){
@@ -98,5 +102,22 @@ public class OrderService {
             responses.add(mapToOrderResponse(order));
         }
         return responses;
+    }
+
+    @Transactional
+    public void confirmOrder(Long orderId){
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
+        if(order.getStatus()!=OrderStatus.CREATED){
+            throw new InvalidOrderStateException(orderId, order.getStatus());
+        }
+        order.setStatus(OrderStatus.CONFIRMED);
+
+        for(OrderItem orderItem: order.getOrderItems()) {
+            Long productId = orderItem.getProductId();
+            inventoryService.confirmReservation(productId, orderItem.getQuantity());
+        }
+
+        order.setUpdatedAt(LocalDateTime.now());
+        orderRepository.save(order);
     }
 }

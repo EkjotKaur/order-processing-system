@@ -1,7 +1,7 @@
 package com.ekjot.orderprocessing.exception;
 
 public class PaymentAlreadyExistsException extends RuntimeException {
-  public PaymentAlreadyExistsException(String message) {
-    super(message);
-  }
+    public PaymentAlreadyExistsException(Long orderId) {
+        super("Payment already exists for orderId: " + orderId);
+    }
 }
