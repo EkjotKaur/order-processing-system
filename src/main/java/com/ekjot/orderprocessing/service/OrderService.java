@@ -39,7 +39,6 @@ public class OrderService {
         return new OrderResponse(order.getId(), order.getCustomerId(), items, order.getStatus(), order.getTotalAmount(), order.getCreatedAt());
     }
 
-
     public OrderService(OrderRepository orderRepository, ProductRepository productRepository, InventoryService inventoryService){
         this.orderRepository = orderRepository;
         this.inventoryService = inventoryService;
@@ -119,5 +118,24 @@ public class OrderService {
 
         order.setUpdatedAt(LocalDateTime.now());
         orderRepository.save(order);
+    }
+
+    @Transactional
+    public OrderResponse cancelOrder(Long orderId){
+        Order order = getOrderById(orderId);
+        if(order.getStatus()!=OrderStatus.CREATED){
+            throw new InvalidOrderStateException(orderId, order.getStatus());
+        }
+        order.setStatus(OrderStatus.CANCELLED);
+
+        for(OrderItem orderItem: order.getOrderItems()) {
+            Long productId = orderItem.getProductId();
+            inventoryService.releaseReservation(productId, orderItem.getQuantity());
+        }
+
+        order.setUpdatedAt(LocalDateTime.now());
+        orderRepository.save(order);
+
+        return mapToOrderResponse(order);
     }
 }
