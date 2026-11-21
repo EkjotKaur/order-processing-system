@@ -25,6 +25,9 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
 
+    @Embedded
+    private ShippingAddress shippingAddress;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -92,5 +95,13 @@ public class Order {
     public void removeOrderItem(OrderItem item){
         orderItems.remove(item);
         item.setOrder(null);
+    }
+
+    public ShippingAddress getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(ShippingAddress shippingAddress) {
+        this.shippingAddress = shippingAddress;
     }
 }

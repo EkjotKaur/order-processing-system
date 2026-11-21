@@ -12,14 +12,16 @@ public class OrderResponse {
     private List<OrderItemResponse> items;
     private OrderStatus status;
     private BigDecimal totalAmount;
+    private ShippingAddressResponse shippingAddress;
     private LocalDateTime createdAt;
 
-    public OrderResponse(Long id, Long customerId, List<OrderItemResponse> items, OrderStatus status, BigDecimal totalAmount, LocalDateTime createdAt){
+    public OrderResponse(Long id, Long customerId, List<OrderItemResponse> items, OrderStatus status, BigDecimal totalAmount, ShippingAddressResponse shippingAddress, LocalDateTime createdAt){
         this.id = id;
         this.customerId = customerId;
         this.items = items;
         this.status = status;
         this.totalAmount = totalAmount;
+        this.shippingAddress = shippingAddress;
         this.createdAt = createdAt;
     }
 
@@ -69,5 +71,13 @@ public class OrderResponse {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public ShippingAddressResponse getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(ShippingAddressResponse shippingAddress) {
+        this.shippingAddress = shippingAddress;
     }
 }

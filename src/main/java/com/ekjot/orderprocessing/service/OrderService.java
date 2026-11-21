@@ -2,20 +2,19 @@ package com.ekjot.orderprocessing.service;
 
 import com.ekjot.orderprocessing.dto.request.CreateOrderItemRequest;
 import com.ekjot.orderprocessing.dto.request.CreateOrderRequest;
-import com.ekjot.orderprocessing.dto.request.UpdateInventoryStockRequest;
-import com.ekjot.orderprocessing.dto.response.InventoryResponse;
+import com.ekjot.orderprocessing.dto.request.ShippingAddressRequest;
 import com.ekjot.orderprocessing.dto.response.OrderItemResponse;
 import com.ekjot.orderprocessing.dto.response.OrderResponse;
+import com.ekjot.orderprocessing.dto.response.ShippingAddressResponse;
 import com.ekjot.orderprocessing.entity.Inventory;
 import com.ekjot.orderprocessing.entity.Order;
 import com.ekjot.orderprocessing.entity.OrderItem;
-import com.ekjot.orderprocessing.entity.Product;
+import com.ekjot.orderprocessing.entity.ShippingAddress;
 import com.ekjot.orderprocessing.enums.OrderStatus;
 import com.ekjot.orderprocessing.enums.ProductStatus;
 import com.ekjot.orderprocessing.exception.InvalidOrderStateException;
 import com.ekjot.orderprocessing.exception.OrderNotFoundException;
 import com.ekjot.orderprocessing.exception.ProductInactiveException;
-import com.ekjot.orderprocessing.exception.ProductNotFoundException;
 import com.ekjot.orderprocessing.repository.OrderRepository;
 import com.ekjot.orderprocessing.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -31,13 +30,25 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final InventoryService inventoryService;
 
+    private ShippingAddress mapToShippingAddress(ShippingAddressRequest shippingAddressRequest){
+        return new ShippingAddress(shippingAddressRequest.getName(), shippingAddressRequest.getPhone(), shippingAddressRequest.getLine1(), shippingAddressRequest.getLine2(), shippingAddressRequest.getCity(), shippingAddressRequest.getState(), shippingAddressRequest.getCountry(), shippingAddressRequest.getPincode());
+    }
+
+    private ShippingAddressResponse mapToShippingAddressResponse(ShippingAddress shippingAddress){
+        if (shippingAddress == null) {
+            return null;
+        }
+        return new ShippingAddressResponse(shippingAddress.getName(), shippingAddress.getPhone(), shippingAddress.getLine1(), shippingAddress.getLine2(), shippingAddress.getCity(), shippingAddress.getState(), shippingAddress.getCountry(), shippingAddress.getPincode());
+    }
+
     private OrderResponse mapToOrderResponse(Order order){
         List<OrderItemResponse> items = new ArrayList<>();
         for(OrderItem item: order.getOrderItems()) {
             items.add(new OrderItemResponse(item.getProductId(), item.getProductName(), item.getQuantity(), item.getUnitPrice(), item.getDiscount(), item.getFinalPrice()));
         }
-        return new OrderResponse(order.getId(), order.getCustomerId(), items, order.getStatus(), order.getTotalAmount(), order.getCreatedAt());
+        return new OrderResponse(order.getId(), order.getCustomerId(), items, order.getStatus(), order.getTotalAmount(), mapToShippingAddressResponse(order.getShippingAddress()), order.getCreatedAt());
     }
+
 
     public OrderService(OrderRepository orderRepository, ProductRepository productRepository, InventoryService inventoryService){
         this.orderRepository = orderRepository;
@@ -49,6 +60,7 @@ public class OrderService {
         Order order = new Order();
         order.setCustomerId(request.getCustomerId());
         order.setStatus(OrderStatus.CREATED);
+        order.setShippingAddress(mapToShippingAddress(request.getShippingAddress()));
 
         BigDecimal totalPrice = BigDecimal.ZERO;
 
