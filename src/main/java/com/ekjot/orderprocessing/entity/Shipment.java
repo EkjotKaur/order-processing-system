@@ -17,7 +17,7 @@ public class Shipment {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ShipmentStatus status;
+    private ShipmentStatus status = ShipmentStatus.CREATED;
 
     private String carrier;
 
