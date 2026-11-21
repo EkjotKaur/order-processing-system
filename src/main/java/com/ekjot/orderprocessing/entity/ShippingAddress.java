@@ -15,7 +15,7 @@ public class ShippingAddress {
 
     public ShippingAddress(String name, String phone, String line1, String line2, String city, String state, String country, String pincode){
         this.name = name;
-        this.city = city;
+        this.phone = phone;
         this.line1 = line1;
         this.line2 = line2;
         this.city = city;
