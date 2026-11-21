@@ -10,6 +10,7 @@ import com.ekjot.orderprocessing.entity.Inventory;
 import com.ekjot.orderprocessing.entity.Order;
 import com.ekjot.orderprocessing.entity.OrderItem;
 import com.ekjot.orderprocessing.entity.ShippingAddress;
+import com.ekjot.orderprocessing.enums.FulfillmentStatus;
 import com.ekjot.orderprocessing.enums.OrderStatus;
 import com.ekjot.orderprocessing.enums.ProductStatus;
 import com.ekjot.orderprocessing.exception.InvalidOrderStateException;
@@ -46,7 +47,7 @@ public class OrderService {
         for(OrderItem item: order.getOrderItems()) {
             items.add(new OrderItemResponse(item.getProductId(), item.getProductName(), item.getQuantity(), item.getUnitPrice(), item.getDiscount(), item.getFinalPrice()));
         }
-        return new OrderResponse(order.getId(), order.getCustomerId(), items, order.getStatus(), order.getTotalAmount(), mapToShippingAddressResponse(order.getShippingAddress()), order.getCreatedAt());
+        return new OrderResponse(order.getId(), order.getCustomerId(), items, order.getStatus(), order.getTotalAmount(), order.getFulfillmentStatus(), mapToShippingAddressResponse(order.getShippingAddress()), order.getCreatedAt());
     }
 
 
@@ -149,5 +150,15 @@ public class OrderService {
         orderRepository.save(order);
 
         return mapToOrderResponse(order);
+    }
+
+    @Transactional
+    public void updateFulfillmentStatus(Long orderId, FulfillmentStatus status){
+        Order order = getOrderById(orderId);
+
+        order.setFulfillmentStatus(status);
+        order.setUpdatedAt(LocalDateTime.now());
+
+        orderRepository.save(order);
     }
 }
