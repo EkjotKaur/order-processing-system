@@ -23,7 +23,7 @@ public class ShipmentResponse {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
-    
+
     public ShipmentResponse(Long id, Long orderId, ShipmentStatus status, String carrier, String trackingNumber, LocalDateTime shippedAt, LocalDateTime deliveredAt, LocalDateTime createdAt, LocalDateTime updatedAt){
         this.id = id;
         this.orderId = orderId;
