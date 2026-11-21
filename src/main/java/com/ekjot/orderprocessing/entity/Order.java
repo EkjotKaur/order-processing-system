@@ -1,5 +1,6 @@
 package com.ekjot.orderprocessing.entity;
 
+import com.ekjot.orderprocessing.enums.FulfillmentStatus;
 import com.ekjot.orderprocessing.enums.OrderStatus;
 import jakarta.persistence.*;
 
@@ -24,6 +25,12 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    private FulfillmentStatus fulfillmentStatus = FulfillmentStatus.NOT_SHIPPED;
+
+    @Embedded
+    private ShippingAddress shippingAddress;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -92,5 +99,21 @@ public class Order {
     public void removeOrderItem(OrderItem item){
         orderItems.remove(item);
         item.setOrder(null);
+    }
+
+    public ShippingAddress getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(ShippingAddress shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
+
+    public FulfillmentStatus getFulfillmentStatus() {
+        return fulfillmentStatus;
+    }
+
+    public void setFulfillmentStatus(FulfillmentStatus fulfillmentStatus) {
+        this.fulfillmentStatus = fulfillmentStatus;
     }
 }

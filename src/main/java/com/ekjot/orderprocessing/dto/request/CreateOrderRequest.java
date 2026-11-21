@@ -14,6 +14,10 @@ public class CreateOrderRequest {
     @Valid
     private List<CreateOrderItemRequest> items;
 
+    @NotNull
+    @Valid
+    private ShippingAddressRequest shippingAddress;
+
     public List<CreateOrderItemRequest> getItems() {
         return items;
     }
@@ -28,5 +32,13 @@ public class CreateOrderRequest {
 
     public void setCustomerId(Long customerId) {
         this.customerId = customerId;
+    }
+
+    public ShippingAddressRequest getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(ShippingAddressRequest shippingAddress) {
+        this.shippingAddress = shippingAddress;
     }
 }

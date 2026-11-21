@@ -72,4 +72,19 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleInvalidOrderStateException(InvalidOrderStateException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
+
+    @ExceptionHandler(ShipmentAlreadyExistsException.class)
+    public ResponseEntity<String> handleShipmentAlreadyExistsException(ShipmentAlreadyExistsException e){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
+    @ExceptionHandler(ShipmentNotFoundException.class)
+    public ResponseEntity<String> handleShipmentNotFoundException(ShipmentNotFoundException e){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler(InvalidShipmentStateException.class)
+    public ResponseEntity<String> handleInvalidShipmentStateException(InvalidShipmentStateException e){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
 }
